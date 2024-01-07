@@ -2,7 +2,7 @@ NAME = fractol
 
 CC = cc
 
-SOURCES = fractol.c fractol_utils.c
+SOURCES = fractol.c fractol_utils.c libx_utils.c
 
 OBJECTS = $(SOURCES:.c=.o)
 

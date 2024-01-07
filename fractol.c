@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:23:07 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/07 17:55:39 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/07 21:42:53 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,11 @@ int	main(int ac, char **av)
                                                         &vars.img.bpp, 
                                                         &vars.img.l_len, 
                                                         &vars.img.endian);
-        if (init(ac, av, &fract))
-            //calls the function to plot the function
+        if (init(ac, av, &fract, vars))
+		{
+			printf("Enters here ### ");
+			render_fract(&fract);
+		}
 		else
 		{
 			//Todo : exit and error path -- print "ERROR!"
@@ -36,7 +39,7 @@ int	main(int ac, char **av)
             free(vars.mlx);
             free(vars.win);
             // free(vars.img);
-            free(t_init);
+            //free(t_init);
             
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:27:12 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/07 18:51:02 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/07 21:56:30 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,12 @@ int ft_atof(const char *s, double *arg)
 	return ((*arg) *= sign, 1);
 }
 
-t_complex   complex_sum(t_complex cmp1, t_complex cmp2)
+static t_complex   complex_sum(t_complex cmp1, t_complex cmp2)
 {
     return (t_complex){cmp1.r + cmp2.r, cmp1.i + cmp2.i};    
 }
 
-t_complex   complex_mul(t_complex cmp1, t_complex cmp2)
+static t_complex   complex_mul(t_complex cmp1, t_complex cmp2)
 {
     // (a + bi) * (c + di)
     // ac + adi + bci - bd
@@ -95,18 +95,63 @@ t_complex   complex_mul(t_complex cmp1, t_complex cmp2)
     };
 }
 
+static double	scale_nbr(double nbr, double n_max, double n_min, double o_min, double o_max)
+{
+	return (((nbr - o_min) * (n_max * n_min) / (o_max - o_min)) - n_min);
+}
+
 //function ; z^2 + c
-void    iterate(t_fractol *fract)
+void    iterate(t_fractol *fract, int x, int y)
 {
     int         i;
+	int			color;
     t_complex   z;
-    //t_complex c; //co
 
     i = 0;
-    z = complex_sum(complex_mul(z, z), (*fract).c);
+	z = fract->z_init;
+	fract->c.r = scale_nbr(x, -2, 2, 0, WIDTH - 1);
+	fract->c.i = scale_nbr(y, 2, -2, 0, HEIGHT - 1);
+	//printf("**** point_c [%lf][%lf]\n", fract->c.r, fract->c.i); //!:
     while (i < fract->max_iter)
     {
-        //if ()
+		//printf("point [%d][%d]\n", x, y); //!:
+        z = complex_sum(complex_mul(z, z), (*fract).c);
+		if ((z.r * z.r) + (z.i * z.i) > fract->esc_val)
+		{
+			//put the pixel to the img
+			color = scale_nbr(i, WHITE, BLACK, 0, fract->max_iter);
+			my_pixel_put(fract->img, x, y, color);
+			return ;
+		}
         i++;
     }
+	my_pixel_put(fract->img, x, y, BLACK);
+}
+
+void render_fract(t_fractol *fract)
+{
+	int x;
+	int y;
+
+	x = 0;
+	while (x < WIDTH)
+	{
+		y = 0;
+		while (y < HEIGHT)
+		{
+			iterate(fract, x, y);
+			y++;
+		}
+		x++;
+	}
+
+	//!verif
+	printf("bpp ---> [%i]\n", fract->img->bpp);
+	//put the image to the window 
+	//mlx_put_image_to_window(fract->mlx_ptr,
+							// fract->win_ptr,
+							// fract->img->img,
+							// 0, 0);
+
+	// mlx_loop(fract->mlx_ptr);
 }
