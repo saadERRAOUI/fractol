@@ -6,13 +6,11 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:27:12 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/06 22:30:57 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/07 18:51:02 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-// #include <stdlib.h>
-// #include <stdio.h>
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -79,4 +77,36 @@ int ft_atof(const char *s, double *arg)
 		i++;
 	}
 	return ((*arg) *= sign, 1);
+}
+
+t_complex   complex_sum(t_complex cmp1, t_complex cmp2)
+{
+    return (t_complex){cmp1.r + cmp2.r, cmp1.i + cmp2.i};    
+}
+
+t_complex   complex_mul(t_complex cmp1, t_complex cmp2)
+{
+    // (a + bi) * (c + di)
+    // ac + adi + bci - bd
+    // r : (a * c - (b * d)) ; i : (a * d) + (b * c)
+    return (t_complex){
+        (cmp1.r * cmp2.r) - (cmp1.i * cmp2.i), 
+        (cmp1.r * cmp2.i) + (cmp1.i * cmp2.r)    
+    };
+}
+
+//function ; z^2 + c
+void    iterate(t_fractol *fract)
+{
+    int         i;
+    t_complex   z;
+    //t_complex c; //co
+
+    i = 0;
+    z = complex_sum(complex_mul(z, z), (*fract).c);
+    while (i < fract->max_iter)
+    {
+        //if ()
+        i++;
+    }
 }
