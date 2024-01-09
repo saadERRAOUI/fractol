@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:27:12 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/07 21:56:30 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/08 23:52:39 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,29 @@ int ft_atof(const char *s, double *arg)
 	return ((*arg) *= sign, 1);
 }
 
+int color_gener(int iter, int m_iter) {
+    // Adjust these parameters as needed
+    int m_color_val = 255;
+
+    // Calculate color intensity based on the iter count
+    int r = (iter * m_color_val) / m_iter;
+    int g = (iter * m_color_val * 2) / m_iter;
+    int b = (iter * m_color_val * 3) / m_iter;
+
+    // Combine the color intensities into a single integer
+    int color = (r << 16) | (g << 8) | b;
+
+    return color;
+}
+
 static t_complex   complex_sum(t_complex cmp1, t_complex cmp2)
 {
     return (t_complex){cmp1.r + cmp2.r, cmp1.i + cmp2.i};    
+}
+
+static t_complex    complex_bar(t_complex cmp)
+{
+    return (t_complex){cmp.r, -1 * cmp.i};
 }
 
 static t_complex   complex_mul(t_complex cmp1, t_complex cmp2)
@@ -95,40 +115,38 @@ static t_complex   complex_mul(t_complex cmp1, t_complex cmp2)
     };
 }
 
-static double	scale_nbr(double nbr, double n_max, double n_min, double o_min, double o_max)
+
+static double scale_nbr(double nbr, double n_max, double n_min, double o_min, double o_max)
 {
-	return (((nbr - o_min) * (n_max * n_min) / (o_max - o_min)) - n_min);
+    return (((nbr - o_min) * (n_max - n_min)) / (o_max - o_min)) + n_min;
 }
 
 //function ; z^2 + c
+//Mandelbrot 
+//Todo : change the iterate() function to be generic;
+//Todo : change the iteration logic to the a function as arg in t_fractol;
 void    iterate(t_fractol *fract, int x, int y)
 {
-    int         i;
-	int			color;
-    t_complex   z;
-
-    i = 0;
-	z = fract->z_init;
-	fract->c.r = scale_nbr(x, -2, 2, 0, WIDTH - 1);
-	fract->c.i = scale_nbr(y, 2, -2, 0, HEIGHT - 1);
-	//printf("**** point_c [%lf][%lf]\n", fract->c.r, fract->c.i); //!:
-    while (i < fract->max_iter)
+    int  color;
+    
+    if (fract->f_nbr == 0 || fract->f_nbr == 2)//corresponds to Mandelbrot or Mandelbar
     {
-		//printf("point [%d][%d]\n", x, y); //!:
-        z = complex_sum(complex_mul(z, z), (*fract).c);
-		if ((z.r * z.r) + (z.i * z.i) > fract->esc_val)
-		{
-			//put the pixel to the img
-			color = scale_nbr(i, WHITE, BLACK, 0, fract->max_iter);
-			my_pixel_put(fract->img, x, y, color);
-			return ;
-		}
-        i++;
+        fract->z_init = (t_complex){0, 0};
+        fract->c = (t_complex){
+            scale_nbr(x, -2, 2, 0, WIDTH), 
+            scale_nbr(y, +2, -2, 0, HEIGHT)};
     }
-	my_pixel_put(fract->img, x, y, BLACK);
+    else if (fract->f_nbr == 1) // corresponds to Julia
+    {
+        fract->z_init = (t_complex){
+            scale_nbr(x, -2, 2, 0, WIDTH), 
+            scale_nbr(y, +2, -2, 0, HEIGHT)};
+    }
+    color = fract->f_fract(fract);
+	my_pixel_put(fract->img, x, y, color);
 }
 
-void render_fract(t_fractol *fract)
+void    render_fract(t_fractol *fract)
 {
 	int x;
 	int y;
@@ -146,12 +164,100 @@ void render_fract(t_fractol *fract)
 	}
 
 	//!verif
-	printf("bpp ---> [%i]\n", fract->img->bpp);
-	//put the image to the window 
-	//mlx_put_image_to_window(fract->mlx_ptr,
-							// fract->win_ptr,
-							// fract->img->img,
-							// 0, 0);
+	//printf("bpp ---> [%i]\n", fract->img->bpp);
+	// put the image to the window 
+	mlx_put_image_to_window(fract->mlx_ptr,
+							fract->win_ptr,
+							fract->img->img,
+							0, 0);
+    //Todo :: Listen to key events and print key
+    mlx_hook(fract->win_ptr, 2, 1L<<0, f_key_listner, fract);
+    // (fract->win_ptr, f_key_listner, fract);
+    if (fract->win_ptr != NULL && fract->mlx_ptr != NULL)
+	    mlx_loop(fract->mlx_ptr);
+}
 
-	// mlx_loop(fract->mlx_ptr);
+int     iter_julia(t_fractol *fract)
+{
+    int         i;
+	int			color;
+    t_complex   z;
+
+    i = 0;
+	z = fract->z_init;
+    // printf("#1 Enters Here JULIA initials ### %lf - %lf\n", z.r, z.i);
+    // printf("#2 Enters Here JULIA constant ### %lf - %lf\n", fract->c.r, fract->c.i);
+
+    while (i < fract->max_iter)
+    {
+        z = complex_sum(complex_mul(z, z), fract->c);
+		if (((z.r * z.r) + (z.i * z.i)) > fract->esc_val)
+		{
+			color = color_gener(i, fract->max_iter);
+            // printf("#3 Enters Here JULIA color ### %i\n", color);
+			return (color);
+		}
+        i++;
+    }
+    return ((int) WHITE);
+}
+
+int     iter_Mandelbrot(t_fractol *fract)
+{
+    int         i;
+	int			color;
+    t_complex   z;
+
+    i = 0;
+	z = fract->z_init;
+	// fract->c.r = scale_nbr(x, -2, +2, 0, WIDTH - 1);
+	// fract->c.i = scale_nbr(y, +2, -2, 0, HEIGHT - 1);
+	//printf("!!! **** point_c [%lf][%lf][%lf]\n", fract->c.r, fract->c.i, fract->esc_val); //!:
+    while (i < fract->max_iter)
+    {
+		//printf("point [%d][%d]\n", x, y); //!:
+        z = complex_sum(complex_mul(z, z), fract->c);
+       // printf(" *** z_complex - reel[%lf][%lf]\n", z.r, z.i);
+		if (((z.r * z.r) + (z.i * z.i)) > fract->esc_val)
+		{
+			//put the pixel to the img
+            //printf("::::::::::::::::::::: Enters here !!!\n");
+			color = color_gener(i, fract->max_iter);
+            //printf(":::: %i comb %i COLOR %i !!!\n", i, fract->max_iter, color);
+			//my_pixel_put(fract->img, x, y, color);
+			return (color);
+		}
+        i++;
+    }
+	//my_pixel_put(fract->img, x, y, WHITE);
+    return ((int)WHITE);
+}
+
+int     iter_Mandelbar(t_fractol *fract)
+{
+    int         i;
+	int			color;
+    t_complex   z;
+
+    i = 0;
+	z = fract->z_init;
+	// fract->c.r = scale_nbr(x, -2, +2, 0, WIDTH - 1);
+	// fract->c.i = scale_nbr(y, +2, -2, 0, HEIGHT - 1);
+	//printf("!!! **** point_c [%lf][%lf][%lf]\n", fract->c.r, fract->c.i, fract->esc_val); //!:
+    while (i < fract->max_iter)
+    {
+		//printf("point [%d][%d]\n", x, y); //!:
+        z = complex_bar(complex_sum(complex_mul(z, z), fract->c));
+       // printf(" *** z_complex - reel[%lf][%lf]\n", z.r, z.i);
+		if (((z.r * z.r) + (z.i * z.i)) > fract->esc_val)
+		{
+			//put the pixel to the img
+            //printf("::::::::::::::::::::: Enters here !!!\n");
+			color = color_gener(i, fract->max_iter);
+			return (color);
+		}
+        i++;
+    }
+	//my_pixel_put(fract->img, x, y, WHITE);
+    return ((int)WHITE);
 }

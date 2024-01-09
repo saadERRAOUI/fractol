@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 17:02:41 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/07 21:40:58 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/09 01:11:53 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ int init(int ac, char **av, t_fractol *fract, t_init vars)
 			fract->mlx_ptr = vars.mlx;
 			fract->win_ptr = vars.win;
 			fract->img = &vars.img;
+            fract->f_nbr = 1;
+            fract->esc_val = ESC_VAL;
 			fract->max_iter = MAX_ITER;
-			
+            fract->f_fract = iter_julia;
 			//if done return 1 --> success
 			return (1);
 		}
@@ -42,11 +44,26 @@ int init(int ac, char **av, t_fractol *fract, t_init vars)
 		fract->mlx_ptr = vars.mlx;
 		fract->win_ptr = vars.win;
 		fract->img = &vars.img;
+        fract->f_nbr = 0;
 		fract->max_iter = MAX_ITER;
+        fract->esc_val = ESC_VAL;
 		fract->z_init = (t_complex){0, 0};
+        fract->f_fract = iter_Mandelbrot;
 
 		return (1);
 	}
+    else if (ft_strcmp(MANDELBAR, av[1]) == 0)
+    {
+        fract->mlx_ptr = vars.mlx;
+		fract->win_ptr = vars.win;
+		fract->img = &vars.img;
+        fract->f_nbr = 2;
+        fract->max_iter = MAX_ITER;
+        fract->esc_val = ESC_VAL;
+		fract->z_init = (t_complex){0, 0};
+        fract->f_fract = iter_Mandelbar;
+        return (1);
+    }
 
 	return (0);
 }
@@ -57,4 +74,18 @@ void	my_pixel_put(t_data *img, int x, int y, int color)
 
 	offset = (img->l_len * y) + (x * (img->bpp / 8));
 	*((unsigned int *)(offset + img->addr)) = color;
+}
+
+int    f_key_listner(int keycode, t_fractol fract)
+{
+    printf("[NOTIF] -> this key is pressed -> [%d]\n", keycode);
+    if (keycode == ESCAPE_KEY)
+    {
+        printf("%p -- %p \n", fract.mlx_ptr, fract.win_ptr);
+        mlx_destroy_window(fract.mlx_ptr, fract.win_ptr);
+        mlx_destroy_image(fract.mlx_ptr, fract.img->img);
+        free(fract.mlx_ptr);
+        fract.mlx_ptr = NULL;
+    }
+    return (0);
 }
