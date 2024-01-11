@@ -2,12 +2,14 @@ NAME = fractol
 
 CC = cc
 
-SOURCES = fractol.c fractol_utils.c libx_utils.c
+CFLAGS = -Wall -Wextra -Werror
+
+SOURCES = fractol.c fractol_utils.c libx_utils.c math_utils.c
 
 OBJECTS = $(SOURCES:.c=.o)
 
 $(NAME) : $(OBJECTS)
-	$(CC) -fsanitize=address -g3 -Wall -Wextra -Werror $(OBJECTS) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	$(CC) -fsanitize=address -g3 $(CFLAGS) $(OBJECTS) -lmlx -framework OpenGL -framework AppKit -o $(NAME) 
 all :  $(NAME)
 
 clean : 

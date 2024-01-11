@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:23:07 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/08 23:07:08 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/11 22:07:51 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,26 @@
 int	main(int ac, char **av)
 {
     t_fractol fract;
-    t_init vars;
 	
 	if (ac > 1)
-	{
-        vars.mlx = mlx_init();
-        vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, TITLE);
-        vars.img.img = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
-        vars.img.addr = mlx_get_data_addr(vars.img.img, 
-                                                        &vars.img.bpp, 
-                                                        &vars.img.l_len, 
-                                                        &vars.img.endian);
-        if (init(ac, av, &fract, vars))
-		{
+    {
+        if (init(ac, av, &fract))
+        {
 			render_fract(&fract);
-		}
+            mlx_hook(fract.win_ptr, 2, 1L<<0, f_key_listner, &fract); 
+            //! - 2 reference to onkeydown event 
+            //! - 1L<<0 Mask references to keyPress 
+            mlx_mouse_hook(fract.win_ptr, f_mouse_listner, &fract);
+            //mlx_loop_hook(fract.mlx_ptr, render_fract, &fract);
+            mlx_loop(fract.mlx_ptr);
+        }
 		else
 		{
 			//Todo : exit and error path -- print "ERROR!"
             //!Important !! 
             //Todo : Bundle this logic into one function 
-            free(vars.mlx);
-            free(vars.win);
+            // free(vars.mlx);
+            // free(vars.win);
             // free(vars.img);
             //free(t_init);
             
