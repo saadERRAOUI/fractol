@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 23:04:51 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 23:15:29 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 23:51:18 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,34 @@ void	calc_coeffs(t_fractol *fract, int x, int y, int sign)
 	fract->y_max -= y_temp * (HEIGHT - y) * fract->z_coeff * sign;
 	mlx_clear_window(fract->mlx_ptr, fract->win_ptr);
 	render_fract(fract);
+}
+
+static void	ft_putstr(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		write(1, &s[i], 1);
+		i++;
+	}
+}
+
+void	exit_path(int path, t_fractol *fract)
+{
+	if (path == 0)
+	{
+		mlx_destroy_image(fract->mlx_ptr, fract->img->img);
+		mlx_destroy_window(fract->mlx_ptr, fract->win_ptr);
+		exit(1);
+	}
+	else if (path == -1)
+	{
+		ft_putstr("ERROR!\n************\nPlease Enter a valid input as :\n");
+		ft_putstr("[FRACT_NAME] = Julia/Mandelbrot/Mandelbar\n");
+		ft_putstr("[FRACT_NAME] == Julia -> Julia [double] [double]\n");
+		ft_putstr("************\nThank you :)\n");
+		exit(0);
+	}
 }

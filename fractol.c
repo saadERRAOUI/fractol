@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:23:07 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 23:01:38 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 23:48:53 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	main(int ac, char **av)
 	t_fractol	fract;
 
 	if (ac <= 1 || !init(ac, av, &fract))
-		return (0);
+		exit_path(-1, &fract);
 	fract.mlx_ptr = mlx_init();
 	fract.win_ptr = mlx_new_window(fract.mlx_ptr, WIDTH, HEIGHT, TITLE);
 	fract.img->img = mlx_new_image(fract.mlx_ptr, WIDTH, HEIGHT);

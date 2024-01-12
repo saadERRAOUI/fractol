@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 17:02:41 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 22:53:00 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 23:48:45 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	my_pixel_put(t_data *img, int x, int y, int color)
 int	f_key_listner(int keycode, t_fractol *fract)
 {
 	if (keycode == ESC_KEY)
-		exit(1);
+		exit_path(0, fract);
 	else if (keycode == AR_U_KEY
 		|| keycode == AR_D_KEY
 		|| keycode == AR_L_KEY

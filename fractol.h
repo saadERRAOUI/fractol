@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:23:40 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 23:33:41 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 23:47:05 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <stdio.h>
+# include <unistd.h>
 # include <mlx.h>
 
 # define WIDTH 1000
@@ -91,6 +92,7 @@ t_complex	complex_mul(t_complex cmp1, t_complex cmp2);
 t_complex	complex_bar(t_complex cmp);
 t_complex	complex_sum(t_complex cmp1, t_complex cmp2);
 void		my_pixel_put(t_data *img, int x, int y, int color);
+void		exit_path(int path, t_fractol *fract);
 void		calc_coeffs(t_fractol *fract, int x, int y, int sign);
 double		scale_nbr(double nbr, double n_max, double n_min, double o_max);
 
