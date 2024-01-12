@@ -9,7 +9,7 @@ SOURCES = fractol.c fractol_utils.c libx_utils.c math_utils.c
 OBJECTS = $(SOURCES:.c=.o)
 
 $(NAME) : $(OBJECTS)
-	$(CC) -fsanitize=address -g3 $(CFLAGS) $(OBJECTS) -lmlx -framework OpenGL -framework AppKit -o $(NAME) 
+	$(CC) -g3 -fsanitize=address $(CFLAGS) $(OBJECTS) -O3 -lmlx -framework OpenGL -framework AppKit -o $(NAME) 
 all :  $(NAME)
 
 clean : 

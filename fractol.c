@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:23:07 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 18:05:16 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 22:05:37 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,20 @@
 
 int	main(int ac, char **av)
 {
-    t_fractol fract;
-    //! - 2 reference to onkeydown event 
-    //! - 1L<<0 Mask references to keyPress 
-	
-	if (ac > 1)
-    {
-        if (init(ac, av, &fract))
-        {
-			render_fract(&fract);
-            mlx_mouse_hook(fract.win_ptr, f_mouse_listner, &fract);
-            mlx_hook(fract.win_ptr, 2, 1L<<0, f_key_listner, &fract); 
-            mlx_loop(fract.mlx_ptr);
-        }
-		else
-		{
-            printf("Tesst exit");
-			//Todo : exit and error path -- print "ERROR!"
-            //!Important !! 
-            //Todo : Bundle this logic into one function  
-		}
-	}
-	return (0);	
+	t_fractol	fract;
+
+	if (ac <= 1 || !init(ac, av, &fract))
+		return (0);
+	fract.mlx_ptr = mlx_init();
+	fract.win_ptr = mlx_new_window(fract.mlx_ptr, WIDTH, HEIGHT, TITLE);
+	fract.img->img = mlx_new_image(fract.mlx_ptr, WIDTH, HEIGHT);
+	fract.img->addr = mlx_get_data_addr(fract.img->img,
+			&fract.img->bpp,
+			&fract.img->l_len,
+			&fract.img->endian);
+	render_fract(&fract);
+	mlx_mouse_hook(fract.win_ptr, f_mouse_listner, &fract);
+	mlx_hook(fract.win_ptr, 2, 1L << 0, f_key_listner, &fract);
+	mlx_loop(fract.mlx_ptr);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:27:12 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 18:14:21 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 22:30:10 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ int ft_atof(const char *s, double *arg)
 	return ((*arg) *= sign, 1);
 }
 
-int color_gener(int iter, int m_iter) {
+int color_gener(int iter, int m_iter)
+{
 	int m_color_val = 255;
 	int r = (iter * m_color_val) / m_iter;
 	int g = (iter * m_color_val * 2) / m_iter;
@@ -99,7 +100,7 @@ void    iterate(t_fractol *fract, int x, int y)
 {
 	int  color;
 	
-	if (fract->f_nbr == 0 || fract->f_nbr == 2)//corresponds to Mandelbrot or Mandelbar
+	if (fract->f_nbr == 0 || fract->f_nbr == 2)
 	{
 		fract->z_init = (t_complex){0, 0};
 		fract->c = (t_complex){
@@ -107,7 +108,7 @@ void    iterate(t_fractol *fract, int x, int y)
 			scale_nbr(y, fract->y_max, fract->y_min, 0, HEIGHT) + fract->y_shift
 		};
 	}
-	else if (fract->f_nbr == 1) // corresponds to Julia
+	else if (fract->f_nbr == 1)
 	{
 		fract->z_init = (t_complex){
 			scale_nbr(x, fract->x_max, fract->x_min, 0, WIDTH) + fract->x_shift, 
@@ -191,61 +192,34 @@ int     iter_Mandelbar(t_fractol *fract)
 
 	i = 0;
 	z = fract->z_init;
-	// fract->c.r = scale_nbr(x, -2, +2, 0, WIDTH - 1);
-	// fract->c.i = scale_nbr(y, +2, -2, 0, HEIGHT - 1);
-	//printf("!!! **** point_c [%lf][%lf][%lf]\n", fract->c.r, fract->c.i, fract->esc_val); //!:
 	while (i < fract->max_iter)
 	{
-		//printf("point [%d][%d]\n", x, y); //!:
 		z = complex_bar(complex_sum(complex_mul(z, z), fract->c));
-	   // printf(" *** z_complex - reel[%lf][%lf]\n", z.r, z.i);
 		if (((z.r * z.r) + (z.i * z.i)) > fract->esc_val)
 		{
-			//put the pixel to the img
-			//printf("::::::::::::::::::::: Enters here !!!\n");
 			color = color_gener(i, fract->max_iter);
 			return (color);
 		}
 		i++;
 	}
-	//my_pixel_put(fract->img, x, y, WHITE);
 	return ((int)WHITE);
 }
 
-// double abs_val(double arg)
-// {
-// 	if (arg >= 0)
-// 		return (arg);
-// 	return (arg * -1);
-// }
-/*
-    temp =( x_max - x_min )/ width;
-    fract->x_min +=  x*temp*fract->z_coeff;
-    xmax -= temp*(W- x)z->coef
-    
-*/
-void	calc_coeffs(t_fractol *fract, double x, double y)
+void	calc_coeffs(t_fractol *fract, int x, int y, int sign)
 {
-    double x_temp = (fract->x_max - fract->x_min) / WIDTH;
-    double y_temp = (fract->y_max - fract->y_min) / HEIGHT;
-
-	// fract->x_min =  (x - (fract->x_min / fract->z_coeff));
-	// fract->x_max =  (x + (fract->x_max / fract->z_coeff));
-	// fract->y_min =  (y - (fract->y_min / fract->z_coeff));
-	// fract->y_max =  (y + (fract->y_max / fract->z_coeff));
+    double x_temp;
+    double y_temp;
     
-    
-    fract->x_min +=  x * x_temp * fract->z_coeff;
-	fract->x_max -=  x_temp * (WIDTH - x) * fract->z_coeff;
-	fract->y_min +=  y * y_temp * fract->z_coeff;
-	fract->y_max -=  y_temp * (HEIGHT - y) * fract->z_coeff;
-    // printf("sign %i\n", sign);
-	// printf("new x_min %lf\n", fract->x_min);;
-    
-	// printf("new x_max %lf\n", fract->x_max);
-	// printf("new y_min %lf\n", fract->y_min);
-	// printf("new y_max %lf\n", fract->y_max);
-
+    if (sign == 1)
+        fract->ratio *= 1.1;
+    else
+        fract->ratio /= 1.1;
+    x_temp = (fract->x_max - fract->x_min) / WIDTH;
+    y_temp = (fract->y_max - fract->y_min) / HEIGHT;
+    fract->x_min +=  x * x_temp * fract->z_coeff * sign;
+	fract->x_max -=  x_temp * (WIDTH - x) * fract->z_coeff * sign;
+	fract->y_min +=  y * y_temp * fract->z_coeff * sign;
+	fract->y_max -=  y_temp * (HEIGHT - y) * fract->z_coeff * sign;
 	mlx_clear_window(fract->mlx_ptr, fract->win_ptr);
     render_fract(fract);
 }

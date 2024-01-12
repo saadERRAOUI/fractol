@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:23:40 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 18:14:38 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 22:10:44 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct	s_data
 
 typedef struct s_fractol
 {
+    double      ratio;
 	void        *mlx_ptr;
 	void        *win_ptr;
 	int         f_nbr;
@@ -89,7 +90,7 @@ t_complex	complex_sum(t_complex cmp1, t_complex cmp2);
 int			init_mandel(t_fractol *fract, int ac, int f_nbr);
 int			init_julia(t_fractol *fract, int ac, char **av);
 int         f_mouse_listner(int button, int x, int y, t_fractol *fract);
-void        calc_coeffs(t_fractol *fract, double x, double y);
+void        calc_coeffs(t_fractol *fract, int x, int y, int sign);
 double      scale_nbr(double nbr, double n_max, double n_min, double o_min, double o_max);
 
 #endif
