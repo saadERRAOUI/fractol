@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:27:12 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/11 22:07:47 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 17:04:49 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,23 +212,19 @@ int     iter_Mandelbar(t_fractol *fract)
 	return ((int)WHITE);
 }
 
-double abs_val(double arg)
-{
-	if (arg >= 0)
-		return (arg);
-	return (arg * -1);
-}
+// double abs_val(double arg)
+// {
+// 	if (arg >= 0)
+// 		return (arg);
+// 	return (arg * -1);
+// }
 
-void	calc_coeffs(t_fractol *fract, double x, double y, int sign)
+void	calc_coeffs(t_fractol *fract, double x, double y)
 {
-
-	double coeff = 1.0125;
-	if (sign == -1)
-		coeff = 0.0125;
-	fract->x_min =  abs_val(x + 2) * coeff * fract->x_min;
-	fract->x_max =  abs_val(x - 2) * coeff * fract->x_max;
-	fract->y_min =  abs_val(y - 2) * coeff * fract->y_min;
-	fract->y_max =  abs_val(y + 2) * coeff * fract->y_max;
+	fract->x_min =  (x - (fract->x_min / fract->z_coeff));
+	fract->x_max =  (x + (fract->x_max / fract->z_coeff));
+	fract->y_min =  (y - (fract->y_min / fract->z_coeff));
+	fract->y_max =  (y + (fract->y_max / fract->z_coeff));
 
 	// printf("sign %i\n", sign);
 	// printf("new x_min %lf\n", fract->x_min);

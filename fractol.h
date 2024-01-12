@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:23:40 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/11 21:52:37 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 17:05:03 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct s_fractol
 	double      y_max;
 	double      x_shift;
 	double      y_shift;
+    double      z_coeff;
 }				t_fractol;
 
 int			ft_strcmp(const char *s1, const char *s2);
@@ -88,7 +89,7 @@ t_complex	complex_sum(t_complex cmp1, t_complex cmp2);
 int			init_mandel(t_fractol *fract, int ac, int f_nbr);
 int			init_julia(t_fractol *fract, int ac, char **av);
 int         f_mouse_listner(int button, int x, int y, t_fractol *fract);
-void        calc_coeffs(t_fractol *fract, double x, double y, int sign);
+void        calc_coeffs(t_fractol *fract, double x, double y);
 double      scale_nbr(double nbr, double n_max, double n_min, double o_min, double o_max);
 
 #endif
