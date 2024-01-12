@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:23:07 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 17:39:19 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 18:05:16 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	main(int ac, char **av)
 {
     t_fractol fract;
-            //! - 2 reference to onkeydown event 
-            //! - 1L<<0 Mask references to keyPress 
+    //! - 2 reference to onkeydown event 
+    //! - 1L<<0 Mask references to keyPress 
 	
 	if (ac > 1)
     {

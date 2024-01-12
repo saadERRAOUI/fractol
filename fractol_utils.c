@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:27:12 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 17:04:49 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 18:14:21 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,16 +218,30 @@ int     iter_Mandelbar(t_fractol *fract)
 // 		return (arg);
 // 	return (arg * -1);
 // }
-
+/*
+    temp =( x_max - x_min )/ width;
+    fract->x_min +=  x*temp*fract->z_coeff;
+    xmax -= temp*(W- x)z->coef
+    
+*/
 void	calc_coeffs(t_fractol *fract, double x, double y)
 {
-	fract->x_min =  (x - (fract->x_min / fract->z_coeff));
-	fract->x_max =  (x + (fract->x_max / fract->z_coeff));
-	fract->y_min =  (y - (fract->y_min / fract->z_coeff));
-	fract->y_max =  (y + (fract->y_max / fract->z_coeff));
+    double x_temp = (fract->x_max - fract->x_min) / WIDTH;
+    double y_temp = (fract->y_max - fract->y_min) / HEIGHT;
 
-	// printf("sign %i\n", sign);
-	// printf("new x_min %lf\n", fract->x_min);
+	// fract->x_min =  (x - (fract->x_min / fract->z_coeff));
+	// fract->x_max =  (x + (fract->x_max / fract->z_coeff));
+	// fract->y_min =  (y - (fract->y_min / fract->z_coeff));
+	// fract->y_max =  (y + (fract->y_max / fract->z_coeff));
+    
+    
+    fract->x_min +=  x * x_temp * fract->z_coeff;
+	fract->x_max -=  x_temp * (WIDTH - x) * fract->z_coeff;
+	fract->y_min +=  y * y_temp * fract->z_coeff;
+	fract->y_max -=  y_temp * (HEIGHT - y) * fract->z_coeff;
+    // printf("sign %i\n", sign);
+	// printf("new x_min %lf\n", fract->x_min);;
+    
 	// printf("new x_max %lf\n", fract->x_max);
 	// printf("new y_min %lf\n", fract->y_min);
 	// printf("new y_max %lf\n", fract->y_max);

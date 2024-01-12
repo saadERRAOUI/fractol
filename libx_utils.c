@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 17:02:41 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 17:12:11 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 18:14:45 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ int init(int ac, char **av, t_fractol *fract)
     fract->x_max = 2;
     fract->y_min = -2;
     fract->y_max = 2;
-	fract->z_coeff = 1;
+	fract->z_coeff = 0.1;
     fract->x_shift = 0;
-    fract->y_shift = 0;                                                    
+    fract->y_shift = 0;
 	if (ft_strcmp(JULIA, av[1]) == 0)
-        return (init_julia(fract, ac, av));
+	        return (init_julia(fract, ac, av));
 	else if (ft_strcmp(MANDELBROT, av[1]) == 0)
         return (init_mandel(fract, ac, 0));
     else if (ft_strcmp(MANDELBAR, av[1]) == 0)
@@ -74,13 +74,10 @@ int f_key_listner(int keycode, t_fractol *fract)
 int f_mouse_listner(int button, int x, int y, t_fractol *fract)
 {
     //!Todo : protect from other mouse events
+	printf("button %d\n", button);
     double _x, _y;
     _x = scale_nbr(x, fract->x_max, fract->x_min, 0, HEIGHT);
     _y = scale_nbr(y, fract->y_max, fract->y_min, 0, WIDTH);
-    if (button == MOUSE_IN_KEY)
-		fract->z_coeff = fract->z_coeff / 2;
-    else if (button == MOUSE_OUT_KEY)
-        fract->z_coeff = fract->z_coeff * 2;
-	calc_coeffs(fract, (double)x, (double)y);
+	calc_coeffs(fract, _x, _y);
 	return (0);
 }
