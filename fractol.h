@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:23:40 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 22:10:44 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 23:33:41 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,62 +35,63 @@
 # define MOUSE_IN_KEY 4
 # define MOUSE_OUT_KEY 5
 
-typedef struct s_fractol t_fractol;
+typedef struct s_fractol	t_fractol;
 
-typedef int (*t_func)(t_fractol *);
+typedef int					(*t_func)(t_fractol *);
 
-typedef struct	s_complex
+typedef struct s_complex
 {
 	double	r;
 	double	i;
 }				t_complex;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	void	*img;
 	char	*addr;
 	int		bpp;
 	int		l_len;
 	int		endian;
-}				t_data;
+}			t_data;
 
 typedef struct s_fractol
 {
-    double      ratio;
-	void        *mlx_ptr;
-	void        *win_ptr;
-	int         f_nbr;
-	t_data      *img;
-	int         max_iter;
-	double      esc_val;
+	double		ratio;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	t_data		*img;
+	int			f_nbr;
+	int			max_iter;
+	double		esc_val;
 	t_complex	c;
 	t_complex	z_init;
-	t_func      f_fract;
-	double      x_min;
-	double      x_max;
-	double      y_min;
-	double      y_max;
-	double      x_shift;
-	double      y_shift;
-    double      z_coeff;
+	t_func		f_fract;
+	double		x_min;
+	double		x_max;
+	double		y_min;
+	double		y_max;
+	double		x_shift;
+	double		y_shift;
+	double		z_coeff;
 }				t_fractol;
 
 int			ft_strcmp(const char *s1, const char *s2);
 int			ft_atof(const char *s, double *arg);
 int			init(int ac, char **av, t_fractol *fract);
 int			render_fract(t_fractol *fract);
-void		my_pixel_put(t_data *img, int x, int y, int color);
-int     	iter_Mandelbrot(t_fractol *fract);
+int			iter_mandelbrot(t_fractol *fract);
+int			color_gener(int iter, int m_iter);
 int			iter_julia(t_fractol *fract);
-int			iter_Mandelbar(t_fractol *fract);
+int			iter_mandelbar(t_fractol *fract);
 int			f_key_listner(int keycode, t_fractol *fract);
+int			init_mandel(t_fractol *fract, int ac, int f_nbr);
+int			init_julia(t_fractol *fract, int ac, char **av);
+int			f_mouse_listner(int button, int x, int y, t_fractol *fract);
 t_complex	complex_mul(t_complex cmp1, t_complex cmp2);
 t_complex	complex_bar(t_complex cmp);
 t_complex	complex_sum(t_complex cmp1, t_complex cmp2);
-int			init_mandel(t_fractol *fract, int ac, int f_nbr);
-int			init_julia(t_fractol *fract, int ac, char **av);
-int         f_mouse_listner(int button, int x, int y, t_fractol *fract);
-void        calc_coeffs(t_fractol *fract, int x, int y, int sign);
-double      scale_nbr(double nbr, double n_max, double n_min, double o_min, double o_max);
+void		my_pixel_put(t_data *img, int x, int y, int color);
+void		calc_coeffs(t_fractol *fract, int x, int y, int sign);
+double		scale_nbr(double nbr, double n_max, double n_min, double o_max);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:27:12 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 22:30:10 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 23:27:00 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,19 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
-static int valid_str(char *s)
+static int	valid_str(char *s)
 {
-	int i;
-	int count;
-	
+	int	i;
+	int	count;
+
 	i = 0;
 	count = 0;
 	while (s[i])
 	{
-		if (!((s[i] >= '0' && s[i] <= '9') || s[i] == '.' || s[i] == '-' || s[i] == '+'))
+		if (!((s[i] >= '0' && s[i] <= '9')
+				|| s[i] == '.'
+				|| s[i] == '-'
+				|| s[i] == '+'))
 			return (0);
 		if (s[i] == '.')
 			count++;
@@ -44,12 +47,12 @@ static int valid_str(char *s)
 	return ((count == 1 || count == 0));
 }
 
-int ft_atof(const char *s, double *arg)
+int	ft_atof(const char *s, double *arg)
 {
-	int i;
-	int sign;
-	double dec;
-	int flag;
+	int		i;
+	int		sign;
+	double	dec;
+	int		flag;
 
 	if (!valid_str((char *)s))
 		return (0);
@@ -70,7 +73,7 @@ int ft_atof(const char *s, double *arg)
 		else if (flag == 1 && (s[i] >= '0' && s[i] <= '9'))
 		{
 			(*arg) = (*arg) + dec * (s[i] - '0');
-			dec *= 0.1; 
+			dec *= 0.1;
 		}
 		else if (s[i] == '.')
 			flag = 1;
@@ -79,50 +82,33 @@ int ft_atof(const char *s, double *arg)
 	return ((*arg) *= sign, 1);
 }
 
-int color_gener(int iter, int m_iter)
+void	iterate(t_fractol *fract, int x, int y)
 {
-	int m_color_val = 255;
-	int r = (iter * m_color_val) / m_iter;
-	int g = (iter * m_color_val * 2) / m_iter;
-	int b = (iter * m_color_val * 3) / m_iter;
-	int color = (r << 16) | (g << 8) | b;
+	int	color;
 
-	return color;
-}
-
-
-double scale_nbr(double nbr, double n_max, double n_min, double o_min, double o_max)
-{
-	return (((nbr - o_min) * (n_max - n_min)) / (o_max - o_min)) + n_min;
-}
-
-void    iterate(t_fractol *fract, int x, int y)
-{
-	int  color;
-	
 	if (fract->f_nbr == 0 || fract->f_nbr == 2)
 	{
 		fract->z_init = (t_complex){0, 0};
 		fract->c = (t_complex){
-			scale_nbr(x, fract->x_max, fract->x_min, 0, WIDTH) + fract->x_shift, 
-			scale_nbr(y, fract->y_max, fract->y_min, 0, HEIGHT) + fract->y_shift
+			scale_nbr(x, fract->x_max, fract->x_min, WIDTH) + fract->x_shift,
+			scale_nbr(y, fract->y_max, fract->y_min, HEIGHT) + fract->y_shift
 		};
 	}
 	else if (fract->f_nbr == 1)
 	{
 		fract->z_init = (t_complex){
-			scale_nbr(x, fract->x_max, fract->x_min, 0, WIDTH) + fract->x_shift, 
-			scale_nbr(y, fract->y_max, fract->y_min, 0, HEIGHT) + fract->y_shift
+			scale_nbr(x, fract->x_max, fract->x_min, WIDTH) + fract->x_shift,
+			scale_nbr(y, fract->y_max, fract->y_min, HEIGHT) + fract->y_shift
 		};
 	}
 	color = fract->f_fract(fract);
 	my_pixel_put(fract->img, x, y, color);
 }
 
-int    render_fract(t_fractol *fract)
+int	render_fract(t_fractol *fract)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	x = 0;
 	while (x < WIDTH)
@@ -136,90 +122,8 @@ int    render_fract(t_fractol *fract)
 		x++;
 	}
 	mlx_put_image_to_window(fract->mlx_ptr,
-							fract->win_ptr,
-							fract->img->img,
-							0, 0);
+		fract->win_ptr,
+		fract->img->img,
+		0, 0);
 	return (0);
-}
-
-int     iter_julia(t_fractol *fract)
-{
-	int         i;
-	int			color;
-	t_complex   z;
-
-	i = 0;
-	z = fract->z_init;
-	while (i < fract->max_iter)
-	{
-		z = complex_sum(complex_mul(z, z), fract->c);
-		if (((z.r * z.r) + (z.i * z.i)) > fract->esc_val)
-		{
-			color = color_gener(i, fract->max_iter);
-			return (color);
-		}
-		i++;
-	}
-	return ((int) WHITE);
-}
-
-int     iter_Mandelbrot(t_fractol *fract)
-{
-	int         i;
-	int			color;
-	t_complex   z;
-
-	i = 0;
-	z = fract->z_init;
-	while (i < fract->max_iter)
-	{
-		z = complex_sum(complex_mul(z, z), fract->c);
-		if (((z.r * z.r) + (z.i * z.i)) > fract->esc_val)
-		{
-			color = color_gener(i, fract->max_iter);
-			return (color);
-		}
-		i++;
-	}
-	return ((int)WHITE);
-}
-
-int     iter_Mandelbar(t_fractol *fract)
-{
-	int         i;
-	int			color;
-	t_complex   z;
-
-	i = 0;
-	z = fract->z_init;
-	while (i < fract->max_iter)
-	{
-		z = complex_bar(complex_sum(complex_mul(z, z), fract->c));
-		if (((z.r * z.r) + (z.i * z.i)) > fract->esc_val)
-		{
-			color = color_gener(i, fract->max_iter);
-			return (color);
-		}
-		i++;
-	}
-	return ((int)WHITE);
-}
-
-void	calc_coeffs(t_fractol *fract, int x, int y, int sign)
-{
-    double x_temp;
-    double y_temp;
-    
-    if (sign == 1)
-        fract->ratio *= 1.1;
-    else
-        fract->ratio /= 1.1;
-    x_temp = (fract->x_max - fract->x_min) / WIDTH;
-    y_temp = (fract->y_max - fract->y_min) / HEIGHT;
-    fract->x_min +=  x * x_temp * fract->z_coeff * sign;
-	fract->x_max -=  x_temp * (WIDTH - x) * fract->z_coeff * sign;
-	fract->y_min +=  y * y_temp * fract->z_coeff * sign;
-	fract->y_max -=  y_temp * (HEIGHT - y) * fract->z_coeff * sign;
-	mlx_clear_window(fract->mlx_ptr, fract->win_ptr);
-    render_fract(fract);
 }

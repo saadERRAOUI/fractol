@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:56:12 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 22:39:57 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 23:27:40 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,10 @@ int	init_mandel(t_fractol *fract, int ac, int f_nbr)
 		fract->f_nbr = f_nbr;
 		fract->z_init = (t_complex){0, 0};
 		if (!f_nbr)
-			fract->f_fract = iter_Mandelbrot;
+			fract->f_fract = iter_mandelbrot;
 		else
-			fract->f_fract = iter_Mandelbar;
+			fract->f_fract = iter_mandelbar;
 		return (1);
 	}
 	return (0);
 }
-

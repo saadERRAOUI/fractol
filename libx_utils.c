@@ -6,7 +6,7 @@
 /*   By: serraoui <serraoui@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/07 17:02:41 by serraoui          #+#    #+#             */
-/*   Updated: 2024/01/12 22:29:32 by serraoui         ###   ########.fr       */
+/*   Updated: 2024/01/12 22:53:00 by serraoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	init(int ac, char **av, t_fractol *fract)
 ----------------------------------------------------------------------------- */
 void	hndl_view_move(int key, t_fractol *fract)
 {
-	printf("fract->ratio == %lf\n", fract->ratio);
 	if (key == AR_U_KEY)
 		fract->y_shift -= 0.5 / fract->ratio;
 	if (key == AR_D_KEY)
